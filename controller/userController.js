@@ -54,7 +54,18 @@ async function login(req, res) {
       "select username,email,password from usertable where  email=?",
       [email]
     );
-    return res.json({ user: user });
+    if (user.length == 0) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ msg: "invalid credential" });
+    }
+    // compare Password
+    const isMatch = await bcrypt.compare(password, user[0].password);
+    if (!isMatch) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ msg: "invalid Credentials" });
+    }
   } catch (error) {
     console.log(error.message);
     return res
