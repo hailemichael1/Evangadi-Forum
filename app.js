@@ -8,11 +8,16 @@ const dbConnection = require('./db/dbConfig')
 
 // Import user routes
 const userRoutes = require("./routes/userRoute");
-const e = require('express');
+// questions routes middlewre file
+const  questionsRoutes = require("./routes/questionRoute")
+
 // json middleware to exract json data
 app.use(express.json())
 
 app.use("/api/users", userRoutes);
+app.use("api/questions",questionsRoutes)
+
+
  async function start (){
     try {
         const result= await dbConnection.execute("SELECT 'test'")
