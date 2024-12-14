@@ -3,6 +3,9 @@ const app = express();
 const port = 7001;
 // db connection
 const dbConnection = require("./db/dbConfig");
+
+// authorization middleware
+const authMiddleware = require("./middleware/authMiddleware");
 //user routes midleware file
 const userRoutes = require("./routes/userRouter");
 //json midleware
