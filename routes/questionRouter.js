@@ -4,11 +4,11 @@ const {
   getAllQuestions,
   getSingleQuestion,
 } = require("../controller/questionController");
-const authMiddleware = require("../middleware/authMiddleware");
+// const authMiddleware = require("../middleware/authMiddleware");
 const router = express.Router();
 
 // Post a new question
-router.post("/", authMiddleware, askQuestion);
+router.post("/q", askQuestion);
 
 // Get all questions
 router.get("/", getAllQuestions);

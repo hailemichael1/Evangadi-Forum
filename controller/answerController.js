@@ -1,6 +1,5 @@
 const dbConnection = require("../db/dbConfig");
 const { StatusCodes } = require("http-status-codes");
-const crypto = require("crypto");
 
 async function postAnswer(req, res) {
   const { questionid, answer } = req.body;
@@ -13,10 +12,9 @@ async function postAnswer(req, res) {
   }
 
   try {
-    const answerid = crypto.randomUUID();
     await dbConnection.query(
-      "INSERT INTO answers (answerid, userid, questionid, answer) VALUES (?, ?, ?, ?)",
-      [answerid, userid, questionid, answer]
+      "INSERT INTO answers ( userid, questionid, answer) VALUES ( ?, ?, ?)",
+      [userid, questionid, answer]
     );
 
     return res

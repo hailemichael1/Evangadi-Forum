@@ -1,11 +1,14 @@
 const dbConnection = require("../db/dbConfig");
+const bcrypt = require("bcrypt");
+const { StatusCodes } = require("http-status-codes");
+const jwt = require("jsonwebtoken");
 
 async function register(req, res) {
   const { username, firstname, lastname, email, password } = req.body;
-  if (username || firstname || lastname || email || password) {
+  if (!email || !password || !firstname || !lastname || !username) {
     return res
-      .status(400)
-      .json({ msg: "please provide all required information" });
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "please provide all required fields!" });
   }
   try {
     const [user] = await dbConnection.query(
@@ -32,7 +35,7 @@ async function register(req, res) {
       "INSERT INTO users(username, firstname, lastname,email,password) VALUES(? ,?, ?, ?, ?)",
       [username, firstname, lastname, email, hashedPassword]
     );
-    return res.status(StatusCodes.CREATED).json({ msg: "user relisted" });
+    return res.status(StatusCodes.CREATED).json({ msg: "user reigsterd" });
   } catch (error) {
     console.log(error.message);
     return res

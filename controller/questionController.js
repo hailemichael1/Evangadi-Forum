@@ -1,10 +1,10 @@
 const dbConnection = require("../db/dbConfig");
 const { StatusCodes } = require("http-status-codes");
-const crypto = require("crypto");
+const { v4: uuidv4 } = require("uuid");
 
 async function askQuestion(req, res) {
   const { title, description } = req.body;
-  const questionid = crypto.randomUUID();
+
   const userid = req.user.userid;
 
   if (!title || !description) {
@@ -14,6 +14,7 @@ async function askQuestion(req, res) {
   }
 
   try {
+     const questionid = uuidv4();
     await dbConnection.query(
       "INSERT INTO questions (questionid, userid, title, description) VALUES (?, ?, ?, ?)",
       [questionid, userid, title, description]
@@ -32,7 +33,7 @@ async function askQuestion(req, res) {
 async function getAllQuestions(req, res) {
   try {
     const [questions] = await dbConnection.query(
-      `SELECT questionid, title, description, userid FROM questions`
+      " SELECT questionid, title, description, userid FROM questions"
     );
 
     if (questions.length === 0) {
