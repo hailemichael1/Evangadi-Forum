@@ -1,11 +1,17 @@
 const express = require("express");
 const app = express();
+ taskOne_newal
 const port = 7007;
+
+
+
+ main
 // db connection
 const dbConnection = require("./db/dbConfig");
 
 // authorization middleware
 const authMiddleware = require("./middleware/authMiddleware");
+
 //user routes midleware file
 const userRoutes = require("./routes/userRouter");
 //json midleware
@@ -31,3 +37,5 @@ async function start() {
   }
 }
 start();
+
+
