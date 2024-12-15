@@ -17,7 +17,7 @@ async function register(req, res) {
      [username, email]
    );
   //  res.json({user: user})
-   console.log(user);
+  //  console.log(user);
    if (user.length > 0) {
      return res
        .status(StatusCodes.BAD_REQUEST)
