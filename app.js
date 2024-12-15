@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
-const port = 5550;
+const port = 3500;
+
 
 // db connection
 const dbConnection = require("./db/dbConfig");
@@ -11,32 +12,46 @@ const authMiddleware = require("./middleware/authMiddleware");
 // user route middleware file
 const UserRoutes = require("./routes/userRoute");
 
-//do questions middleware
+// question routes middleware file
 const questionsRoutes = require("./routes/questionRoute");
-// answers middleware
+
+// answer routes middleware file
 const answersRoutes = require("./routes/answerRoute");
-//json middleware to extract json data
+
+// JSON middleware to parse incoming request bodies as JSON
 app.use(express.json());
 
-// user route middleware
+// user routes middleware
 app.use("/api/users", UserRoutes);
-//questions routes middleware
+
+// question routes middleware (authMiddleware only applied to POST routes)
+
 app.use("/api/questions", authMiddleware, questionsRoutes);
 
-
-//answer routes middleware
+// answer routes middleware (authMiddleware only applied to POST routes)
 
 app.use("/api/answers", authMiddleware, answersRoutes);
 
 async function start() {
   try {
-    const result = await dbConnection.execute("select'test' ");
-    app.listen(port)
-    console.log("database connection established");
-    console.log(`listening on port ${port}`);
+    // Test database connection (use an actual valid query here)
+    const [rows, fields] = await dbConnection.execute("SELECT 1 + 1 AS result");
+    if (rows[0].result === 2) {
+      console.log("Database connection successful");
+    }
+
+    // Start the server
+    app.listen(port, () => {
+      console.log(`Server is listening on port ${port}`);
+    });
   } catch (error) {
-    console.log(error.message);
+    console.error("Error connecting to the database:", error.message);
   }
 }
+
 start();
+
+
+
+
 

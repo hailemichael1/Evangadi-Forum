@@ -26,3 +26,10 @@ async function authMiddleware(req, res, next) {
 }
 
 module.exports = authMiddleware;
+
+
+
+
+
+
+// The decoded object is the result of successfully verifying a JWT (JSON Web Token) using the jwt.verify() method. 
