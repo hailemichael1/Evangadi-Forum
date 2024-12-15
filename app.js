@@ -1,42 +1,42 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
-const port = 5550;
+ taskOne_newal
+const port = 7007;
 
+
+
+ main
 // db connection
 const dbConnection = require("./db/dbConfig");
 
 // authorization middleware
 const authMiddleware = require("./middleware/authMiddleware");
 
-// user route middleware file
-const UserRoutes = require("./routes/userRoute");
-
-//do questions middleware
-const questionsRoutes = require("./routes/questionRoute");
-// answers middleware
-const answersRoutes = require("./routes/answerRoute");
-//json middleware to extract json data
+//user routes midleware file
+const userRoutes = require("./routes/userRouter");
+//json midleware
 app.use(express.json());
-
-// user route middleware
-app.use("/api/users", UserRoutes);
-//questions routes middleware
-app.use("/api/questions", authMiddleware, questionsRoutes);
-
-
-//answer routes middleware
-
-app.use("/api/answers", authMiddleware, answersRoutes);
-
+//user route midleware
+app.use("/api/users", userRoutes);
+//questions route midleware
+const questionRoutes = require("./routes/questionRouter");
+// question route midleware
+app.use("/api/questions", authMiddleware, questionRoutes);
+//answer route midleware
+const answerRoute = require("./routes/answerRouter");
+// question route midleware
+app.use("/api/answers", authMiddleware, answerRoute);
 async function start() {
   try {
-    const result = await dbConnection.execute("select'test' ");
-    app.listen(port)
-    console.log("database connection established");
-    console.log(`listening on port ${port}`);
-  } catch (error) {
-    console.log(error.message);
+    const result = await dbConnection.execute("select 'test'");
+    app.listen(port);
+    console.log("databse connection established");
+    console.log(`listening on ${port}`);
+  } catch (err) {
+    console.log(err.message);
   }
 }
 start();
+
 

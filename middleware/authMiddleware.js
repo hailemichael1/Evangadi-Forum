@@ -13,7 +13,7 @@ async function authMiddleware(req, res, next) {
   // console.log(token);
 
   try {
-    const { username, userid } = jwt.verify(token, "secret");
+    const { username, userid } = jwt.verify(token, process.env.JWT_SECRET);
     // const  data  = jwt.verify(authHeader, "secret");
     // return res.status(StatusCodes.OK).json({data});
     req.user = { username, userid };
