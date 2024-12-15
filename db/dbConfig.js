@@ -1,12 +1,13 @@
-const mysql2 = require("mysql2");
-const dbConnection = mysql2.createPool({
-  user: "evangadi-admin",
-  database: "evangadi_forum",
-  host: "localhost",
-  password: "123456",
-  connectionLimit: 10,
-});
+const mysql2 = require('mysql2');
 
+// Set up the database connection pool
+const dbConnection = mysql2.createPool({
+  host: 'localhost',
+  user: 'evangadi-admin',
+  password: 'Helen142895',
+  socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock',
+  database: 'evangadi-db'
+});
 
 // dbConnection.execute("select 'test'", (err, result) => {
 //   if (err) {

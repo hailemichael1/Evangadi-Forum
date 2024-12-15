@@ -98,3 +98,4 @@ async function checkUser(req, res) {
 }
 
 module.exports = { register, login, checkUser };
+
