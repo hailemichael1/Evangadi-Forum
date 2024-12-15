@@ -1,11 +1,12 @@
-const mysql = require("mysql2");
-const dbconnection = mysql.createPool({
-  user: "habtamu",
-  database: "db_evangadi_forum",
+const mysql2 = require("mysql2");
+const dbConnection = mysql2.createPool({
+  user: process.env.USER,
+  database: process.env.DATABASE,
   host: "localhost",
-  password: "123456",
+  password: process.env.PASSWORD,
   connectionLimit: 10,
 });
+
 // dbconnection.execute("select 'test'", (err, res) => {
 //   if (err) {
 //     console.log(err.message);
@@ -14,4 +15,4 @@ const dbconnection = mysql.createPool({
 //   }
 // });
 
-module.exports = dbconnection.promise();
+module.exports = dbConnection.promise();

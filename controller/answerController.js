@@ -39,8 +39,8 @@ async function postAnswer(req, res) {
 
     // Insert answer into the database
     await dbConnection.query(
-      "INSERT INTO answers (questionid, userid, answer) VALUES (?, ?, ?)",
-      [questionid, userid, answer]
+      "INSERT INTO answers (questionid, userid, answer,createdAt) VALUES (?,?, ?, ?)",
+      [questionid, userid, answer, new Date()]
     );
 
     // Respond with a success message
@@ -60,8 +60,6 @@ async function postAnswer(req, res) {
 async function getAnswersByQuestionId(req, res) {
   const { questionid } = req.params; // Extract questionid from URL parameters
 
-  console.log("Received questionid:", questionid); // Log to check value
-
   // Check that question ID is provided
   if (!questionid) {
     return res.status(StatusCodes.BAD_REQUEST).json({
@@ -72,7 +70,7 @@ async function getAnswersByQuestionId(req, res) {
   try {
     // Query to get answers for the specified question
     const [answers] = await dbConnection.query(
-      "SELECT answerid, userid, answer FROM answers WHERE questionid = ?",
+      "SELECT answerid, userid, answer,createdAt FROM answers WHERE questionid = ? ORDER BY createdAt DESC",
       [questionid]
     );
 

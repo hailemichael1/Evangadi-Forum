@@ -1,28 +1,40 @@
+require("dotenv").config();
 const express = require("express");
+
 const app = express();
-const port = 5500;
-
-
-// middle wire to read json data
-
-app.use(express.json())
+const port = 5550;
 
 // db connection
-const dbconnection = require("./db/dbConfig");
-// user routes middleware file
+const dbConnection = require("./db/dbConfig");
 
-const userRouter = require("./routes/userRoute");
+// authorization middleware
+const authMiddleware = require("./middleware/authMiddleware");
 
-// user routes middleware
+// user route middleware file
+const UserRoutes = require("./routes/userRoute");
 
-app.use("/api/users", userRouter);
+//do questions middleware
+const questionsRoutes = require("./routes/questionsRoutes");
+// answers middleware
+const answersRoutes = require("./routes/answerRoute");
+//json middleware to extract json data
+app.use(express.json());
+
+// user route middleware
+app.use("/api/users", authMiddleware, UserRoutes);
+//questions routes middleware
+app.use("/api/questions", authMiddleware, questionsRoutes);
+
+//answer routes middleware
+
+app.use("/api/answers", authMiddleware, answersRoutes);
 
 async function start() {
   try {
-    const result = await dbconnection.execute("select 'test' ");
+    const result = await dbConnection.execute("select'test' ");
     app.listen(port);
-    console.log("data base connection established");
-    console.log(`Listening @ ${port}`);
+    console.log("database connection established");
+    console.log(`listening on port ${port}`);
   } catch (error) {
     console.log(error.message);
   }

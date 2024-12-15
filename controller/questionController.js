@@ -27,8 +27,8 @@ async function postquestion(req, res) {
   try {
     const questionid = uuidv4(); // Generate a unique question ID
     await dbConnection.query(
-      "INSERT INTO questions (title, questionid, userid, description, tag) VALUES (?, ?, ?, ?, ?)",
-      [title, questionid, userid, description, tag]
+      "INSERT INTO questions (title, questionid, userid, description, tag, createdAt) VALUES (?, ?, ?, ?,?, ?)",
+      [title, questionid, userid, description, tag, new Date()]
     );
 
     // Respond with a success message
@@ -38,6 +38,7 @@ async function postquestion(req, res) {
       title: title,
       question: description,
       tag: tag,
+      created_at: createdAt,
     });
   } catch (error) {
     console.error("Error posting question:", error.message);
@@ -51,7 +52,7 @@ async function getAllQuestions(req, res) {
   try {
     // Query to get all questions
     const [questions] = await dbConnection.query(
-      "SELECT questionid, title, description, tag FROM questions"
+      "SELECT questionid, title, description, tag,createdAt FROM questions ORDER BY createdAt DESC"
     );
 
     // Check if there are questions
