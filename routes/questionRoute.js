@@ -1,3 +1,4 @@
+
 const express = require("express");
 const {
   askQuestion,
@@ -17,3 +18,4 @@ router.get("/", getAllQuestions);
 router.get("/:question_id", getSingleQuestion);
 
 module.exports = router;
+
