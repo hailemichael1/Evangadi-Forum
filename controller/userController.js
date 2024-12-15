@@ -1,100 +1,57 @@
-// db connection
-const dbConnection = require("../db/dbConfig");
-const bcrypt = require("bcrypt");
-const { StatusCodes } = require("http-status-codes");
-const jwt = require("jsonwebtoken");
+const express = require ("express");
+const db = require ("../db/dbConfig");
+const bcrypt = require ("bcrypt")
 
+
+//register controller
 async function register(req, res) {
- const { username, firstname, lastname, email, password } = req.body;
- if (!email || !password || !firstname || !lastname || !username) {
-   return res
-     .status(StatusCodes.BAD_REQUEST)
-     .json({ msg: "please provide all required fields!" });
- }
- try {
-   const [user] = await dbConnection.query(
-     "select username,userid from users where username =? or email =?",
-     [username, email]
-   );
-  //  res.json({user: user})
-   console.log(user);
-   if (user.length > 0) {
-     return res
-       .status(StatusCodes.BAD_REQUEST)
-       .json({ msg: "user already existed" });
-   }
-   if (password.length < 8) {
-     return res
-       .status(StatusCodes.BAD_REQUEST)
-       .json({ msg: "password must be at least 8 character" });
-   }
-  //  //encrypt the password
-   const salt = await bcrypt.genSalt(10);
-   const hashedPassword = await bcrypt.hash(password, salt);
+  const {username,password, email, firstname, lastname} = req.body;
 
-   await dbConnection.query(
-     "INSERT INTO users(username, firstname, lastname,email,password) VALUES(? ,?, ?, ?, ?)",
-     [username, firstname, lastname, email, hashedPassword]
-   );
-   return res.status(StatusCodes.CREATED).json({ msg: "user relisted" });
- } catch (error) {
-   console.log(error.message);
-   return res
-     .status(StatusCodes.INTERNAL_SERVER_ERROR)
-     .json({ msg: "something went wrong, try again later!" });
- }
+  if (!username || !password || !email || !firstname || !lastname) {
+  return res.status(400).json({msg:"please provided all required fields"});
+  }
+
+  if (password.length < 8) {
+    return res.status(400).json({msg:"password must be at least 8 characters"})
+  }
+try {
+    const [user] = await db.query(
+        "SELECT * FROM users WHERE username = ? AND email = ?",
+        [username, email]
+      );
+      if (user.length > 0) {
+        return res.status(400).json({msg:"user already exist"})
+      }
+} catch (error) {
+    console.log(error.message)
 }
 
+const salt = await bcrypt.genSalt(5);
+const hashedPassword = await bcrypt.hash(password, salt);
 
-async function login(req, res) {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "please enter all required fields!" });
-  }
   try {
-    const [user] = await dbConnection.query(
-      "select username,userid,password from users where email=?",
-      [email]
-    );
-    // return res.json({user: user})
-    if (user.length == 0) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ msg: "invalid credential!" });
-    }
-    // //compare password
-    const isMatch = await bcrypt.compare(password, user[0].password);
-    if (!isMatch) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ msg: "invalid credential!" });
-    }
-    
-    const username = user[0].username;
-    const userid = user[0].userid;
-    const token = jwt.sign({ username, userid }, "secret", {
-      expiresIn: "1d",
-    });
-
-    return res
-      .status(StatusCodes.OK)
-      .json({ msg: "user login successful", token, username });
+    const result = await db.query(
+        "INSERT INTO users (username, password, email, firstname, lastname) VALUES (?, ?, ?, ?, ?)",
+        [username, hashedPassword, email, firstname, lastname]
+      );
+ return res.json({msg:"user registerd"});
   } catch (error) {
     console.log(error.message);
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "something went wrong, try again later!" });
   }
+  
+
 }
 
 
-async function checkUser(req, res) {
-  const username = req.user.username;
-  const userid = req.user.userid;
-  // console.log(userid);
-  res.status(StatusCodes.OK).json({ msg: "valid user", username, userid });
-}
 
-module.exports = { register, login, checkUser };
+//login controller
+function login(req, res) {
+    return res.send("login user")
+  }
+
+  //check controller
+  function check(req, res) {
+    return res.send("check user")
+  }
+
+  module.exports = {login, check, register};

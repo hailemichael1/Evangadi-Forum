@@ -1,42 +1,30 @@
+const dotenv = require ('dotenv');
+      dotenv.config()
 const express = require("express");
+const mysql2 = require ("mysql2");
+const db = require ("./db/dbConfig")
+const userRoute = require ("./routes/userRoute")
+
+
 const app = express();
-const port = 5550;
+const port = 5500;
 
-// db connection
-const dbConnection = require("./db/dbConfig");
-
-// authorization middleware
-const authMiddleware = require("./middleware/authMiddleware");
-
-// user route middleware file
-const UserRoutes = require("./routes/userRoute");
-
-//do questions middleware
-const questionsRoutes = require("./routes/questionRoute");
-// answers middleware
-const answersRoutes = require("./routes/answerRoute");
-//json middleware to extract json data
 app.use(express.json());
-
-// user route middleware
-app.use("/api/users", UserRoutes);
-//questions routes middleware
-app.use("/api/questions", authMiddleware, questionsRoutes);
+app.use('/api/users', userRoute);
 
 
-//answer routes middleware
-
-app.use("/api/answers", authMiddleware, answersRoutes);
 
 async function start() {
-  try {
-    const result = await dbConnection.execute("select'test' ");
-    app.listen(port)
-    console.log("database connection established");
-    console.log(`listening on port ${port}`);
-  } catch (error) {
-    console.log(error.message);
-  }
+    try {
+ const result = await db.execute ("select 'test' ");
+
+ await app.listen(port);
+ console.log(`listening on ${port}`)
+ console.log('db connected');
+    } catch (error) {
+        console.log(error.message)
+    }
 }
 start();
+
 
