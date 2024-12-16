@@ -87,7 +87,7 @@ async function register(req, res) {
      .status(StatusCodes.INTERNAL_SERVER_ERROR)
      .json({ msg: "something went wrong, try again later!" });
  }
-}
+
 
 
 
