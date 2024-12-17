@@ -1,6 +1,6 @@
-import React from 'react'
-import Header from './Components/Header/Header'
-import Footer from './Components/Footer/Footer'
+import React from 'react';
+import Header from './Components/Header/Header';
+import Footer from './Components/Footer/Footer';
 
 function App() {
   return (
@@ -8,7 +8,7 @@ function App() {
       <Header />
       <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,15 +1,15 @@
-import React from 'react'
-import "./Footer.css"
-import "../Footer/Footer.css";
-import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
-import Container from "react-bootstrap/Container";
-import logo from "../../assets/evangadi-logo-footer.png";
-import Col from "react-bootstrap/esm/Col";
-import Row from "react-bootstrap/esm/Row";
+import React from 'react';
+import './Footer.css';
+import '../Footer/Footer.css';
+// import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
+import Container from 'react-bootstrap/Container';
+import logo from '../../assets/evangadi-logo-footer.png';
+import Col from 'react-bootstrap/esm/Col';
+import Row from 'react-bootstrap/esm/Row';
 function Footer() {
- 	return (
+  return (
     <>
-      <footer className='footer-container'>
+      <footer className="footer-container">
         <Container>
           <Row>
             <Col sm={12} md={4} className="my-3">
@@ -19,9 +19,9 @@ function Footer() {
                 </Col>
                 <Row
                   style={{
-                    width: "70%",
-                    margin: "30px 0",
-                    fontSize: "25px",
+                    width: '70%',
+                    margin: '30px 0',
+                    fontSize: '25px',
                   }}
                 >
                   <Col sm={4}>
@@ -56,9 +56,9 @@ function Footer() {
               <h5 className="text-white">Useful Link</h5>
               <ul
                 style={{
-                  listStyle: "none",
-                  marginLeft: "-25px",
-                  lineHeight: "30px",
+                  listStyle: 'none',
+                  marginLeft: '-25px',
+                  lineHeight: '30px',
                 }}
               >
                 <li>
@@ -81,9 +81,9 @@ function Footer() {
 
               <ul
                 style={{
-                  listStyle: "none",
-                  marginLeft: "-25px",
-                  lineHeight: "30px",
+                  listStyle: 'none',
+                  marginLeft: '-25px',
+                  lineHeight: '30px',
                 }}
               >
                 <li>
@@ -104,4 +104,4 @@ function Footer() {
   );
 }
 
-export default Footer
+export default Footer;
