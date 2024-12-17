@@ -2,6 +2,7 @@ const express = require ("express");
 const db = require ("../db/dbConfig");
 const bcrypt = require ("bcrypt");
 const jwt = require ("jsonwebtoken");
+const { StatusCodes } = require("http-status-codes");
 
 
 //register controller
@@ -9,19 +10,19 @@ async function register(req, res) {
   const {username,password, email, firstname, lastname} = req.body;
 
   if (!username || !password || !email || !firstname || !lastname) {
-  return res.status(400).json({msg:"please provide all required fields"});
+  return res.status(StatusCodes.BAD_REQUEST).json({msg:"please provide all required fields"});
   }
 
   if (password.length < 8) {
-    return res.status(400).json({msg:"password must be at least 8 characters"})
+    return res.status(StatusCodes.BAD_REQUEST).json({msg:"password must be at least 8 characters"})
   }
 try {
     const [user] = await db.query(
-        "SELECT * FROM users WHERE username = ? AND email = ?",
+        "SELECT * FROM users WHERE username = ? OR email = ?",
         [username, email]
       );
       if (user.length > 0) {
-        return res.status(400).json({msg:"user already exist"})
+        return res.status(StatusCodes.CONFLICT).json({msg:"user already exist"})
       }
 
 const salt = await bcrypt.genSalt(5);
@@ -51,16 +52,16 @@ async function login(req, res) {
     
   const {email, password} = req.body;
   if (!email || !password) {
-    return res.status(400).json({msg:"provide all required fields"});
+    return res.status(StatusCodes.BAD_REQUEST).json({msg:"provide all required fields"});
   }
   try {
     const [user] = await db.query("select * from users where  email=? " ,[email]);
   if (user.length == 0) {
-    return res.status(400).json({msg:"invalid user"})
+    return res.status(StatusCodes.UNAUTHORIZED).json({msg:"invalid user"})
   }
   const isMatch= await bcrypt.compare(password, user[0].password);
   if (!isMatch ) {
-   return res.status(400).json({msg:"invalid password"})
+   return res.status(StatusCodes.UNAUTHORIZED).json({msg:"invalid password"})
   }
 
  const username = user[0].username
@@ -69,12 +70,13 @@ async function login(req, res) {
         return res.status(200).json({token:token});
   } catch (error) {
     console.log(error)
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg:'something went wrong'})
   }
  }
 
   //check controller
   function check(req, res) {
-    res.status(200).json({msg:req.user})
+    res.status(StatusCodes.OK).json({msg:req.user})
   }
 
   module.exports = {login, check, register};

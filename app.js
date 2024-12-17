@@ -4,6 +4,9 @@ const express = require("express");
 const mysql2 = require ("mysql2");
 const db = require ("./db/dbConfig")
 const userRoute = require ("./routes/userRoute")
+const questionRoute = require ("./routes/questionRoute");
+const answerRoute = require ("./routes/answerRoute")
+const authMiddle = require('./middleware/authMiddleware');
 
 
 const app = express();
@@ -11,7 +14,8 @@ const port = 5500;
 
 app.use(express.json());
 app.use('/api/users', userRoute);
-
+app.use("/api/question", authMiddle, questionRoute);
+app.use("/api/answer", authMiddle, answerRoute);
 
 
 async function start() {
