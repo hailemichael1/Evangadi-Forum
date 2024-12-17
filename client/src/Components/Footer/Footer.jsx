@@ -1,6 +1,7 @@
 import React from 'react'
 import "./Footer.css"
 import "../Footer/Footer.css";
+import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 import Container from "react-bootstrap/Container";
 import logo from "../../assets/evangadi-logo-footer.png";
 import Col from "react-bootstrap/esm/Col";
