@@ -1,0 +1,21 @@
+.card {
+  width: 100%;
+  background-color: rgb(255, 255, 246);
+  padding: 2rem 4rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 4px solid rgb(45, 42, 42);
+}
+
+.card div p {
+  padding: 1rem 1rem;
+}
+
+.card img {
+  width: 7rem;
+  border-radius: 100%;
+  height: auto;
+  object-fit: cover;
+}

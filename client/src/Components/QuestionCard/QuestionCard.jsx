@@ -1,11 +1,20 @@
+import { card } from './QuestionCard.module.css';
+import { BsArrowRight } from 'react-icons/bs';
 function QuestionCard(Questions) {
   console.log(JSON.stringify(Questions, null, 2));
   return (
-    <div>
+    <div className={card}>
+      <div>
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWpfPWgt9O-1jZaIlxyoG-gz3sGQWT7LYMMw&s"
+          alt=""
+        />
+
+        <p>username</p>
+      </div>
       <p>{Questions.Questions.title}</p>
-      <p>{Questions.Questions.description}</p>
+      <BsArrowRight />
     </div>
   );
 }
-// { questionid: "q3", title: "JavaScript Functions", description: "How do functions work in JavaScript?", … }
 export default QuestionCard;

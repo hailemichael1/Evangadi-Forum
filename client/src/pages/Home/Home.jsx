@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import './Home.css';
 import QuestionCard from './../../Components/QuestionCard/QuestionCard';
 
+import Button from 'react-bootstrap/Button';
+
 //main home page
 function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -53,9 +55,11 @@ function Home() {
 
   //     fetchQuestions();
   //   }, [user]);
+
   const filteredQuestion = allQuestions.filter((question) =>
     question.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
   console.log('filteredQuestion', filteredQuestion);
 
   return (
@@ -65,7 +69,10 @@ function Home() {
         <div className="btn_container">
           <a>
             {/* link for ask question button  */}
-            <button className="ask_blue">Ask Question</button>
+            {/* <button className="ask_blue">Ask Question</button> */}
+            <Button className="px-5 ask_blue" variant="primary">
+              Ask Question
+            </Button>
           </a>
           <p>
             welcome: <span>{user.username}</span>
