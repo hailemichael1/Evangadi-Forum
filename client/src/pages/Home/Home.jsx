@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 //main home page
 function Home() {
   const [searchQuery, setSearchQuery] = useState('');
-  const user = { username: 'ademkei2@KJL.COM', id: 4 };
+  const user = { username: 'ademkedir', id: 4 };
   const [allQuestions, setAllQuestions] = useState([
     {
       questionid: 'q1',
@@ -41,21 +41,6 @@ function Home() {
     },
   ]);
 
-  console.log(user);
-
-  //   useEffect(() => {
-  //     const fetchQuestions = async () => {
-  //       try {
-  //         const allQuestion = await axios.get('/question');
-  //         setAllQuestions(allQuestion.data);
-  //       } catch (error) {
-  //         console.error(error);
-  //       }
-  //     };
-
-  //     fetchQuestions();
-  //   }, [user]);
-
   const filteredQuestion = allQuestions.filter((question) =>
     question.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -68,8 +53,6 @@ function Home() {
         {/* button container for asking questions and welcoming the user  */}
         <div className="btn_container">
           <a>
-            {/* link for ask question button  */}
-            {/* <button className="ask_blue">Ask Question</button> */}
             <Button className="px-5 ask_blue" variant="primary">
               Ask Question
             </Button>
