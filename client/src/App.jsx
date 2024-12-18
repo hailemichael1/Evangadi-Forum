@@ -1,11 +1,23 @@
-import React from 'react'
+import { Route, Routes } from "react-router-dom";
+import axios from "./axiosConfig";
+import NewQuestion from "./pages/Questions/NewQuestion.jsx";
+import AllQuestions from "./pages/AllQuestions/AllQuestions.jsx";
+export const AppState = createContext();
 
 function App() {
+ 
   return (
-    <div>
-      <h1>App</h1>
-    </div>
-  )
+    <AppState.Provider value={{ user, setuser, headerToken }}>
+     
+      <Routes>
+        <Route path="/question" element={<NewQuestion />} />
+        <Route path="/all-questions" element={<AllQuestions />} />
+       
+      </Routes>
+
+      <Footer />
+    </AppState.Provider>
+  );
 }
 
-export default App
+export default App;
