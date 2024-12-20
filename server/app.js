@@ -1,8 +1,12 @@
 const express = require('express');
+const morgan = require('morgan');
 const app = express();
 const port = 5550;
 
 const cors = require('cors');
+// ADD LOGGING ON EVERY REQUEST USING MORGAN
+app.use(morgan('dev'));
+
 app.use(cors());
 // db connection
 const dbConnection = require('./db/dbConfig');
