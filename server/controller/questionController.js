@@ -1,10 +1,11 @@
 const dbConnection = require("../db/dbConfig");
 const { StatusCodes } = require("http-status-codes");
-const crypto = require("crypto");
+// const crypto = require("crypto");
+const { v4: uuidv4 } = require('uuid');
 
 async function askQuestion(req, res) {
   const { title, description } = req.body;
-  const questionid = crypto.randomUUID();
+  const questionid = uuidv4();
   const userid = req.user.userid;
 
   if (!title || !description) {
@@ -32,7 +33,7 @@ async function askQuestion(req, res) {
 async function getAllQuestions(req, res) {
   try {
     const [questions] = await dbConnection.query(
-      " SELECT questionid, title, description, userid FROM questions"
+      `SELECT users.userid, users.username, questions.title,questions.questionid, questions.description FROM users JOIN questions ON users.userid = questions.userid ORDER BY id DESC;`
     );
 
     if (questions.length === 0) {
@@ -51,12 +52,16 @@ async function getAllQuestions(req, res) {
 }
 
 async function getSingleQuestion(req, res) {
-  const { question_id } = req.params;
+  const { questionid } = req.params;
 
   try {
     const [question] = await dbConnection.query(
-      "SELECT * FROM questions WHERE questionid = ?",
-      [question_id]
+      `SELECT users.username, questions.title, questions.questionid, questions.description 
+      FROM users 
+      JOIN questions ON users.userid = questions.userid 
+      WHERE questions.questionid = ?;
+    `,
+      [questionid]
     );
 
     if (question.length === 0) {
@@ -74,4 +79,39 @@ async function getSingleQuestion(req, res) {
   }
 }
 
-module.exports = { askQuestion, getAllQuestions, getSingleQuestion };
+async function deleteQuestion(req, res) {
+  const { questionid } = req.params;
+  const userid = req.user.userid;
+
+  try {
+    // Check if the question exists and is owned by the user
+    const [question] = await dbConnection.query(
+      "SELECT * FROM questions WHERE questionid = ? AND userid = ?",
+      [questionid, userid]
+    );
+
+    if (question.length === 0) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        msg: "Question not found or you do not have permission to delete this question.",
+      });
+    }
+
+    // Delete the question
+    await dbConnection.query("DELETE FROM questions WHERE questionid = ?", [
+      questionid,
+    ]);
+    res.status(StatusCodes.OK).json({ msg: "Question deleted successfully." });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      msg: "An unexpected error occurred while deleting the question.",
+    });
+  }
+}
+
+module.exports = {
+  askQuestion,
+  getAllQuestions,
+  getSingleQuestion,
+  deleteQuestion,
+};

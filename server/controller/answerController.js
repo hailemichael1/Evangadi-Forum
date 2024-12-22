@@ -30,11 +30,11 @@ async function postAnswer(req, res) {
 }
 
 async function getAnswersForQuestion(req, res) {
-  const questionid = req.params.question_id;
+  const {questionid} = req.params;
 
   try {
     const [answers] = await dbConnection.query(
-      "SELECT * FROM answers WHERE questionid = ?",
+      "SELECT users.username, answers.answer FROM users JOIN answers ON answers.userid = users.userid WHERE answers.questionid = ?",
       [questionid]
     );
 
@@ -55,4 +55,46 @@ async function getAnswersForQuestion(req, res) {
   }
 }
 
-module.exports = { postAnswer, getAnswersForQuestion };
+async function deleteAnswer(req, res) {
+  const { questionid } = req.params; // Get question ID from request parameters
+  const userid = req.user.userid; // Get user ID from authenticated user
+
+  if (!questionid) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "Question ID is required." });
+  }
+
+  try {
+    
+    const [rows] = await dbConnection.query(
+      "SELECT * FROM answers WHERE questionid = ? AND userid = ?",
+      [questionid, userid]
+    );
+
+    if (rows.length === 0) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        error: "Not Found",
+        message: "No answer found for this question by the user.",
+      });
+    }
+
+    // Delete the answer
+    await dbConnection.query(
+      "DELETE FROM answers WHERE questionid = ? AND userid = ?",
+      [questionid, userid]
+    );
+
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: "Answer deleted successfully." });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: "Internal Server Error",
+      message: "An unexpected error occurred.",
+    });
+  }
+}
+
+module.exports = { postAnswer, getAnswersForQuestion, deleteAnswer };

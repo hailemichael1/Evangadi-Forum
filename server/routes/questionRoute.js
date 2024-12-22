@@ -1,8 +1,14 @@
 const express = require("express");
+// const {
+//   askQuestion,
+//   getAllQuestions,
+//   getSingleQuestion,
+// } = require("../controller/questionController");
 const {
   askQuestion,
   getAllQuestions,
   getSingleQuestion,
+  deleteQuestion,
 } = require("../controller/questionController");
 // const authMiddleware = require("../middleware/authMiddleware");
 const router = express.Router();
@@ -14,6 +20,8 @@ router.post("/", askQuestion);
 router.get("/", getAllQuestions);
 
 // Get a single question by ID
-router.get("/:question_id", getSingleQuestion);
+router.get("/:questionid", getSingleQuestion);
 
-module.exports = router;
+// Delete a single question
+router.delete("/:questionid", deleteQuestion);
+module.exports = router; 

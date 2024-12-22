@@ -1,14 +1,20 @@
-import React, { useState, useEffect } from "react";
-import "./Header.css";
+import React, { useState, useEffect, useContext } from "react";
+import styles from "./Header.module.css";
 import logo from "../../assets/logo0.png";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Link } from "react-router-dom";
+import { AppState } from "../../Router";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const { handleLogout } = useContext(AppState);
+
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const handleResize = () => {
@@ -22,44 +28,70 @@ function Header() {
   }, []);
 
   return (
-    <section className="header_section">
-      <div className="header container">
-        <div className="header_container row align-items-center">
+    <section className={styles.header_section}>
+      <div className={`${styles.header} container`}>
+        <div className={`${styles.header_container} row align-items-center`}>
           <div className="col text-align-right d-flex justify-content-between align-items-center">
             <a href="/">
               <img src={logo} alt="Logo" />
             </a>
-            <div className="header_small" onClick={toggleMenu}>
+            <div className={styles.header_small} onClick={toggleMenu}>
               <MenuIcon style={{ cursor: "pointer" }} />
             </div>
           </div>
           <div
-            className={`header_navlist col mx-auto d-none d-md-block d-lg-block ${
-              menuOpen ? "active" : ""
-            }`}
+            className={`${styles.header_navlist} col mx-auto d-none d-md-block d-lg-block`}
           >
             <div className="d-flex gap-5 justify-content-end align-items-center">
               <div className="gap-3 d-flex">
-                <div>Home</div>
-                <div>How it Works</div>
+                <Link to="/" className={styles.nav_link}>
+                  <div>Home</div>
+                </Link>
+
+                <Link to={"/how-it-works"} className={styles.nav_link}>
+                  <div>How it Works</div>
+                </Link>
               </div>
               <button>
-                <a className="header_btn_blue" href="/login">
-                  Sign In
-                </a>
+                {token ? (
+                  <button
+                    className={styles.header_btn_blue}
+                    onClick={handleLogout}
+                  >
+                    LOG OUT
+                  </button>
+                ) : (
+                  <Link to="/login">
+                    <button className={styles.header_btn_blue}>SIGN IN</button>
+                  </Link>
+                )}
               </button>
             </div>
           </div>
         </div>
       </div>
       {menuOpen && (
-        <div className="mobile-menu">
-          <div className="mobile-menu-item">Home</div>
-          <div className="mobile-menu-item">How it Works</div>
-          <div className="mobile-menu-item">
-            <a className="header_btn_blue" href="/login">
-              Sign In
-            </a>
+        <div className={styles.mobile_menu}>
+          <div className={styles.mobile_menu_item}>
+            <Link to="/" className={styles.nav_link}>
+              <div>Home</div>
+            </Link>
+          </div>
+          <div className={styles.mobile_menu_item}>
+            <Link to={"/how-it-works"} className={styles.nav_link}>
+              <div>How it Works</div>
+            </Link>
+          </div>
+          <div className={styles.mobile_menu_item}>
+            {token ? (
+              <button className={styles.header_btn_blue} onClick={handleLogout}>
+                LOG OUT
+              </button>
+            ) : (
+              <Link to="/login">
+                <button className={styles.header_btn_blue}>SIGN IN</button>
+              </Link>
+            )}
           </div>
         </div>
       )}

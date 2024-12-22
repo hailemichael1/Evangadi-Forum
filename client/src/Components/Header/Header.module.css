@@ -12,7 +12,14 @@
   position: sticky;
   top: 0;
 }
+.nav_link{
+  text-decoration: none;
+  color: #3b455a;
 
+}
+.nav_link:hover {
+  color: #ffa44a;
+}
 .header_navlist {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 600;
@@ -75,7 +82,7 @@ button{
     cursor: pointer;
   }
 
-  .mobile-menu {
+  .mobile_menu {
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -84,8 +91,9 @@ button{
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
   }
 
-  .mobile-menu-item {
+  .mobile_menu_item {
     padding: 10px;
     cursor: pointer;
   }
 }
+ 
