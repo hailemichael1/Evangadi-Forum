@@ -64,7 +64,6 @@ function Routing() {
       value={{ userData, setUserData, headerToken, handleLogout }}
     >
       <Routes>
-        {/* <Route path="/" element={<Login />} /> */}
         <Route path="/login" element={<Login />} />
         <Route
           path="/"
@@ -74,7 +73,8 @@ function Routing() {
             </ProtectedRoute>
           }
         />
-         <Route path="/question/:questionid" element={<Answer />} />
+
+        <Route path="/question/:questionid" element={<Answer />} />
         <Route path="/question" element={<AskQuestions />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="*" element={<NotFound />} />
