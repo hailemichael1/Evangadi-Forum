@@ -5,14 +5,17 @@
   background-color: #f8f8f8;
   background-image: url("../../assets/BG.svg");
   background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh;
   padding: 70px 10px 0 40px;
 
   width: 100%;
 }
 
-
 .login_container {
   justify-content: center;
+  margin-top: 100px;
 }
 
 .login_wrapper {
@@ -27,9 +30,8 @@
   padding-bottom: 20px;
 }
 
-
 .login_box {
-  box-shadow: 0px 0px 6px 0px rgb(56, 55, 55);
+  box-shadow: 0px 0px 6px 0px rgb(185, 182, 182);
 
   background-color: white;
 
@@ -59,7 +61,6 @@
   font-weight: 700;
 }
 
-
 .title_ev {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -71,7 +72,6 @@
   z-index: 1;
 }
 
-
 .login_form a {
   color: chocolate;
 }
@@ -80,8 +80,6 @@
   font-size: 14px;
   padding: 10px;
 }
-
-
 
 .login_form_input input:focus {
   outline: none;
@@ -135,7 +133,6 @@
   padding: 1vh 7vh 10vh;
 }
 
-
 .login_password {
   border: 1px solid #999;
   border-radius: 3px;
@@ -153,7 +150,6 @@
   color: red;
 }
 
-
 .login_invalid {
   color: rgb(255, 0, 0);
   font-size: 2vh;
@@ -168,7 +164,7 @@
 }
 
 .login_btn {
-  background-color: #FF8C0F;
+  background-color: #ff8c0f;
   padding: 5px 0;
   border-radius: 3px;
   cursor: pointer;
@@ -183,3 +179,20 @@
   background-color: #b86001;
 }
 
+.siconContainer{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: auto;
+}
+.passwordInput {
+  padding-right: 40px;
+
+}
+.iconContainer {
+  position: absolute;
+  right: 58%;
+  top: 57%;
+  transform: translateY(-70%);
+  cursor: pointer;
+}

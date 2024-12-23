@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../Components/Layout/Layout";
 import "./login.css";
 import "./register.css";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Login() {
   const navigate = useNavigate();
@@ -12,7 +14,10 @@ function Login() {
   const [password, setPassword] = useState("");
   const [showHide, setShowHide] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const [registerForm, setRegisterForm] = useState({
     username: "",
     firstname: "",
@@ -128,21 +133,28 @@ function Login() {
                             onFocus={border}
                           />
                         </div>
-
                         <br />
-                        <div>
+
+                        <div className="siconContainer">
                           <input
-                            className="login_password"
-                            type="password"
+                            className="login_password passwordInput"
+                            type={showPassword ? "text" : "password"}
                             name="password"
                             placeholder="Enter Your Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             onFocus={border}
                           />
-                          <br />
+                          <div
+                            className="iconContainer"
+                            onClick={togglePasswordVisibility}
+                          >
+                            <FontAwesomeIcon
+                              icon={showPassword ? faEyeSlash : faEye}
+                              color="#FE8402"
+                            />
+                          </div>
                         </div>
-
                         <button type="submit">Login</button>
                       </form>
                     </div>
@@ -270,7 +282,7 @@ function Login() {
                     joining the network here.
                   </p>
                   <div className="login_btn">
-                    <div onClick={handleToggle}>CREATE A NEW ACCOUNT</div>
+                    <div onClick={handleToggle}>How It works</div>
                   </div>
                 </div>
               </div>

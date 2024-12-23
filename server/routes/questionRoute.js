@@ -3,8 +3,8 @@ const {
   askQuestion,
   getAllQuestions,
   getSingleQuestion,
+  deleteQuestion,
 } = require("../controller/questionController");
-// const authMiddleware = require("../middleware/authMiddleware");
 const router = express.Router();
 
 // Post a new question
@@ -16,4 +16,6 @@ router.get("/", getAllQuestions);
 // Get a single question by ID
 router.get("/:questionid", getSingleQuestion);
 
+// Delete a single question
+router.delete("/:questionid", deleteQuestion);
 module.exports = router;
