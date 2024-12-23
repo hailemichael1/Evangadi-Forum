@@ -159,3 +159,10 @@
   color: #da7000;
   text-decoration: none;
 }
+.iconContainer_register{
+  position: absolute;
+  right: 58%;
+  top: 77%;
+  transform: translateY(-70%);
+  cursor: pointer;
+}
