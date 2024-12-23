@@ -5,7 +5,7 @@ const jwt= require("jsonwebtoken");
 function authMiddle(req, res, next) {
     const authToken =  req.headers.authorization;
    if (!authToken || !authToken.startsWith('Bearer')) {
-    return res.status(StatusCodes.BAD_REQUEST).json({msg:"provide token"})
+    return res.status(StatusCodes.UNAUTHORIZED).json({msg:"Authentication invalid"})
    }
    const token=authToken.split(' ')[1]
    
@@ -14,7 +14,7 @@ function authMiddle(req, res, next) {
    req.user = data;
      next();
    } catch (error) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({msg:"invalid token"});
+    return res.status(StatusCodes.UNAUTHORIZED).json({msg:"Authentication invalid"});
    }
 }
 module.exports = authMiddle;

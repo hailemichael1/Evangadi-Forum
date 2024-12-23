@@ -57,7 +57,7 @@ async function login(req, res) {
   try {
     const [user] = await db.query("select * from users where  email=? " ,[email]);
   if (user.length == 0) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({msg:"invalid user"})
+    return res.status(StatusCodes.UNAUTHORIZED).json({msg:"invalid username or password"})
   }
   const isMatch= await bcrypt.compare(password, user[0].password);
   if (!isMatch ) {
@@ -67,7 +67,7 @@ async function login(req, res) {
  const username = user[0].username
  const userid = user[0].userid
  const token = jwt.sign({username, userid},process.env.JWT_SIGN, {expiresIn:"1d"});
-        return res.status(200).json({token:token});
+        return res.status(200).json({token:token,username});
   } catch (error) {
     console.log(error)
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg:'something went wrong'})

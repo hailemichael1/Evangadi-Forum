@@ -5,16 +5,16 @@ const { v4: uuidv4 } = require('uuid');
 
 
 async function createQuestion(req, res){
-    const {title, description, tag} = req.body;
+    const {title, description} = req.body;
     const {username, userid} = req.user;
-if (!title || !description || !tag) {
+if (!title || !description) {
     return req.status(StatusCodes.BAD_REQUEST).json({msg:"provide all required fields"});
 }
 try {
     const questionid = uuidv4();
 
- await db.query( 'INSERT INTO questions (questionid, title, description, userid, tag) VALUES (?, ?, ?, ?, ?)',
-            [questionid, title, description, userid, tag])
+ await db.query( 'INSERT INTO questions (questionid, title, description, userid, username) VALUES (?, ?, ?, ?, ?)',
+            [questionid, title, description, userid, username])
 
 return res.status(StatusCodes.CREATED).json({msg:"question created",questionid});
 } catch (error) {
@@ -22,7 +22,7 @@ return res.status(StatusCodes.CREATED).json({msg:"question created",questionid})
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: "Server Error" });
 }
 }
-
+   //single question
 async function singleQuestion (req, res){
         const {questionid }= req.params;
         // console.log(questionid)
