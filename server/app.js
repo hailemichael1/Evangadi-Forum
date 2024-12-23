@@ -4,6 +4,11 @@ const port = 5550;
 
 const cors = require("cors");
 app.use(cors());
+
+const dotenv = require("dotenv")
+
+dotenv.config()
+
 // db connection
 const dbConnection = require("./db/dbConfig");
 
