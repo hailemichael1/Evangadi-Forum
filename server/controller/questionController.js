@@ -1,6 +1,6 @@
 const dbConnection = require("../db/dbConfig");
 const { StatusCodes } = require("http-status-codes");
-// const crypto = require("crypto");
+
 const { v4: uuidv4 } = require("uuid");
 
 async function askQuestion(req, res) {
@@ -79,4 +79,25 @@ async function getSingleQuestion(req, res) {
   }
 }
 
-module.exports = { askQuestion, getAllQuestions, getSingleQuestion };
+async function deleteQuestion(req, res) {
+  const { questionid } = req.params;
+
+  try {
+    await dbConnection.query("DELETE FROM questions WHERE questionid = ?", [
+      questionid,
+    ]);
+    res.status(StatusCodes.OK).json({ msg: "Question deleted successfully." });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      msg: "An unexpected error occurred while deleting the question.",
+    });
+  }
+}
+
+module.exports = {
+  askQuestion,
+  getAllQuestions,
+  getSingleQuestion,
+  deleteQuestion,
+};

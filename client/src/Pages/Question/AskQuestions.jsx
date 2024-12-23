@@ -14,7 +14,6 @@ function AskQuestions() {
     description: "",
   });
 
-  console.log(form);
 
   const navigate = useNavigate();
 

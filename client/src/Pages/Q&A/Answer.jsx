@@ -6,19 +6,26 @@ import Layout from "../../Components/Layout/Layout";
 import { Link, useParams } from "react-router-dom";
 import { AppState } from "../../Router";
 import axiosBase from "../../axiosConfig";
+import {
+  MdOutlineDelete,
+  MdEdit,
+  MdSave,
+  MdCancelPresentation,
+} from "react-icons/md";
+import { ToastContainer, toast } from "react-toastify";
+
 function Answer() {
   const { questionid } = useParams();
   const [answers, setAnswers] = useState([]);
   const [newAnswer, setNewAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
+  const [editingAnswer, setEditingAnswer] = useState(null);
+  const [updatedAnswer, setUpdatedAnswer] = useState("");
   const token = localStorage.getItem("token");
   const { userData } = useContext(AppState);
+  const headerToken = { Authorization: ` Bearer ${token} ` };
 
-  // Create header token object
-  const headerToken = { Authorization: `Bearer ${token}` };
-
-  // Fetch question data
   useEffect(() => {
     const fetchQuestionData = async () => {
       try {
@@ -36,13 +43,14 @@ function Answer() {
     fetchQuestionData();
   }, [questionid, headerToken]);
 
-  // Fetch answers for the question
   useEffect(() => {
     const fetchAnswers = async () => {
       try {
         const response = await axiosBase.get(`/answers/${questionid}`, {
           headers: headerToken,
         });
+       
+        
         setAnswers(response.data.answers || []);
       } catch (err) {
         console.error("Error fetching answers: ", err);
@@ -52,7 +60,6 @@ function Answer() {
     fetchAnswers();
   }, [questionid, headerToken]);
 
-  // Submit a new answer
   const submitAnswer = async (e) => {
     e.preventDefault();
     if (newAnswer) {
@@ -70,15 +77,75 @@ function Answer() {
         );
 
         const postedAnswer = response.data;
-        // console.log(response.data);
-
         setAnswers((prevAnswers) => [...prevAnswers, postedAnswer]);
         setNewAnswer("");
+        toast.success("Answer posted successfully!");
       } catch (error) {
         console.error("Error posting answer: ", error);
+        toast.error("Failed to post the answer.");
       }
     }
   };
+
+  const startEditing = (answer) => {
+    setEditingAnswer(answer);
+    setUpdatedAnswer(answer.answer);
+  };
+
+  const cancelEditing = () => {
+    setEditingAnswer(null);
+    setUpdatedAnswer("");
+  };
+
+  const updateAnswer = async (e) => {
+    e.preventDefault();
+    if (editingAnswer && updatedAnswer) {
+      try {
+        const response = await axiosBase.patch(
+          `/answers/${questionid}`,
+          {
+            answer: updatedAnswer,
+          },
+          {
+            headers: headerToken,
+          }
+        );
+
+        const updatedAnswerData = response.data;
+        setAnswers((prevAnswers) =>
+          prevAnswers.map((ans) =>
+            ans.questionid === updatedAnswerData.questionid
+              ? updatedAnswerData
+              : ans
+          )
+        );
+        setEditingAnswer(null);
+        setUpdatedAnswer("");
+        toast.success("Answer updated successfully!");
+      } catch (error) {
+        console.error("Error updating answer: ", error);
+        toast.error("Failed to update the answer.");
+      }
+    }
+  };
+
+  const deleteAnswer = async () => {
+    try {
+      await axiosBase.delete(`/answers/${questionid}`, {
+        headers: headerToken,
+      });
+
+      setAnswers((prevAnswers) =>
+        prevAnswers.filter((answer) => answer.username !== userData.username)
+      );
+
+      toast.success("Answer deleted successfully!"); 
+    } catch (error) {
+      console.error("Error deleting answer: ", error);
+      toast.error("Failed to delete the answer."); 
+    }
+  };
+
   return (
     <Layout>
       <div className="answer_container">
@@ -96,15 +163,36 @@ function Answer() {
             <p>Loading answers...</p>
           ) : answers.length > 0 ? (
             answers.map((answer) => (
-              <div>
-                <div key={answer.id} className="Answer">
-                  <div className="answer_prof_pic">
-                    <div>
-                      <BsPersonCircle size={70} color="gray" />
-                    </div>
-                    {answer?.username}
+              <div key={answer.id} className="Answer">
+                <div className="answer_prof_pic">
+                  <div>
+                    <BsPersonCircle size={70} color="gray" />
                   </div>
-                  <div>{answer?.answer}</div>
+                  {answer?.username}
+                </div>
+
+                <div>{answer?.answer}</div>
+                <div>
+                  <MdEdit
+                    style={{
+                      cursor: "pointer",
+                      color: "blue",
+                      marginLeft: "10px",
+                    }}
+                    onClick={() => startEditing(answer)}
+                    size={30}
+                  />
+                </div>
+                <div>
+                  <MdOutlineDelete
+                    style={{
+                      cursor: "pointer",
+                      color: "gray",
+                      marginLeft: "10px",
+                    }}
+                    onClick={() => deleteAnswer(answer.id)}
+                    size={30}
+                  />
                 </div>
               </div>
             ))
@@ -112,8 +200,41 @@ function Answer() {
             <p>No answers available.</p>
           )}
 
+          {editingAnswer && (
+            <div className={styles.edit_form_overlay}>
+              <form onSubmit={updateAnswer} className={styles.edit_form}>
+                <textarea
+                  rows={4}
+                  className={styles.question_description}
+                  value={updatedAnswer}
+                  onChange={(e) => setUpdatedAnswer(e.target.value)}
+                  required
+                />
+                <button type="submit">
+                  <MdSave
+                    style={{
+                      cursor: "pointer",
+                      color: "green",
+                      marginLeft: "10px",
+                    }}
+                    size={30}
+                  />
+                </button>
+
+                <MdCancelPresentation
+                  style={{
+                    cursor: "pointer",
+                    color: "gray",
+                  }}
+                  size={30}
+                  onClick={cancelEditing}
+                />
+              </form>
+            </div>
+          )}
+
           <div className={styles.question_form}>
-            <h4 className={styles.question_post_your}>Ask The Top Question</h4>
+            <h4 className={styles.question_post_your}>Answer The Top Question</h4>
             <h4>
               <Link className={styles.question_post_link} to="/">
                 Go to Question Page
@@ -137,7 +258,9 @@ function Answer() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </Layout>
   );
 }
+
 export default Answer;

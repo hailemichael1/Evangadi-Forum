@@ -5,11 +5,12 @@ import QuestionDetail from "../QuestionDetail/QuestionDetail";
 import "./Allquestion.css";
 import Layout from "../../Components/Layout/Layout";
 import { useNavigate } from "react-router-dom";
-
+import { ToastContainer, toast } from "react-toastify";
 function Homepage() {
   const [userData] = useContext(UserContext);
   const [questions, setQuestions] = useState([]);
   const navigate = useNavigate();
+  const [displayedQuestions, setDisplayedQuestions] = useState(10);
 
   const fetchQuestions = async () => {
     try {
@@ -33,6 +34,20 @@ function Homepage() {
     }
   }, [userData]);
 
+  const handleDeleteQuestion = (questionid) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.filter((question) => question.questionid !== questionid)
+    );
+  };
+
+  const seeMore = () => {
+    setDisplayedQuestions((prevCount) => prevCount + 10); 
+  };
+
+  // Handle showing less questions
+  const seeLess = () => {
+    setDisplayedQuestions(10); 
+  };
   return (
     <Layout>
       <div className="container">
@@ -54,11 +69,24 @@ function Homepage() {
           <h3 className="ns">Questions</h3>
         </div>
         <div>
-          {questions?.map((question) => (
-            <QuestionDetail question={question} key={question.id} />
+          {questions?.slice(0, displayedQuestions).map((question, i) => (
+            <QuestionDetail
+              question={question}
+              key={i}
+              onDelete={handleDeleteQuestion}
+            />
           ))}
+          {displayedQuestions < questions.length && (
+            <button onClick={seeMore}>See More</button>
+          )}
+          {displayedQuestions > 15 && (
+            <button c onClick={seeLess}>
+              See Less
+            </button>
+          )}
         </div>
       </div>
+      <ToastContainer />
     </Layout>
   );
 }
