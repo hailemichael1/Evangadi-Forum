@@ -74,23 +74,8 @@ function Routing() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/question/:questionid"
-          element={
-            <ProtectedRoute>
-              <Answer />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/question"
-          element={
-            <ProtectedRoute>
-              <AskQuestions />
-            </ProtectedRoute>
-          }
-        />
+         <Route path="/question/:questionid" element={<Answer />} />
+        <Route path="/question" element={<AskQuestions />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
