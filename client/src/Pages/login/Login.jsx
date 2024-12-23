@@ -237,16 +237,26 @@ function Login() {
                           </div>
 
                           <br />
-                          <div>
+                         <div className="siconContainer">
                             <input
-                              className="register_password"
-                              type="password"
+                              className="register_password passwordInput"
+                              type={showPassword ? "text" : "password"}
                               name="password"
                               placeholder="Password"
                               value={registerForm.password}
                               onChange={handleRegisterChange}
                               onFocus={border}
                             />
+
+                            <div
+                              className="iconContainer_register"
+                              onClick={togglePasswordVisibility}
+                            >
+                              <FontAwesomeIcon
+                                icon={showPassword ? faEyeSlash : faEye}
+                                color="#FE8402"
+                              />
+                            </div>
                           </div>
 
                           <br />
