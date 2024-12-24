@@ -87,10 +87,10 @@ function Homepage() {
           <h3 className="ns">Questions</h3>
         </div>
         <div>
-          {filteredQuestions.slice(0, displayedQuestions).map((question, i) => (
+          {filteredQuestions.slice(0, displayedQuestions).map((question) => (
             <QuestionDetail
               question={question}
-              key={i}
+              key={question.id}
               onDelete={handleDeleteQuestion}
             />
           ))}

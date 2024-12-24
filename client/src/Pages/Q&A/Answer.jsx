@@ -22,8 +22,8 @@ function Answer() {
   const [data, setData] = useState({});
   const [editingAnswer, setEditingAnswer] = useState(null);
   const [updatedAnswer, setUpdatedAnswer] = useState("");
-  const token = localStorage.getItem("token");
   const { userData } = useContext(AppState);
+  const token = localStorage.getItem("token");
   const headerToken = { Authorization: ` Bearer ${token} ` };
 
   useEffect(() => {
@@ -51,6 +51,8 @@ function Answer() {
         });
 
         setAnswers(response.data.answers);
+        console.log(response.data);
+        
       } catch (err) {
         console.error("Error fetching answers: ", err);
       }
@@ -128,22 +130,29 @@ function Answer() {
     }
   };
 
-  const deleteAnswer = async () => {
+ const deleteAnswer = async (answer) => {
     try {
       await axiosBase.delete(`/answers/${questionid}`, {
         headers: headerToken,
+        data: { answerid: answer.answerid }, 
       });
-
-      setAnswers((prevAnswers) =>
-        prevAnswers.filter((answer) => answer.username !== userData.username)
-      );
+      setAnswers((prevAnswers) => {
+        const updatedAnswers = prevAnswers.filter((ans) => {
+          const currentAnswerId = ans.data ? ans.data.answerid : ans.answerid;
+          return currentAnswerId !== answer.answerid;
+        });
+        console.log("After filtering:", updatedAnswers);
+        return updatedAnswers;
+      });
 
       toast.success("Answer deleted successfully!");
     } catch (error) {
-      console.error("Error deleting answer: ", error);
+      console.error("Error deleting answer:", error);
       toast.error("Failed to delete the answer.");
     }
   };
+
+
 
   return (
     <Layout>
@@ -189,7 +198,7 @@ function Answer() {
                       color: "gray",
                       marginLeft: "10px",
                     }}
-                    onClick={() => deleteAnswer()}
+                    onClick={() => deleteAnswer(answer)}
                     size={30}
                   />
                 </div>
