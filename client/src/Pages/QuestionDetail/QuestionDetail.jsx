@@ -43,15 +43,18 @@ function QuestionDetail({ question, onDelete }) {
         </div>
 
         <div className="question_title">
-          <div className="question_content">{question?.title}</div>
-          <div className="question_arrow">
-            <div onClick={handleDelete}>
+          <div className="question_content"><div>{question?.title}</div> <div onClick={handleDelete}>
               <MdOutlineDelete
                 style={{
                   cursor: "pointer",
+                  marginLeft: "15px",
                 }}
+                size={30}
               />
-            </div>
+            </div></div>
+          
+          <div className="question_arrow">
+            
             <IoIosArrowForward />
           </div>
         </div>
