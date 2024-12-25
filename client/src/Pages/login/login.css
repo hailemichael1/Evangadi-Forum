@@ -180,6 +180,7 @@
 }
 
 .siconContainer{
+  position: relative;
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -191,7 +192,7 @@
 }
 .iconContainer {
   position: absolute;
-  right: 58%;
+  right: 2%;
   top: 57%;
   transform: translateY(-70%);
   cursor: pointer;

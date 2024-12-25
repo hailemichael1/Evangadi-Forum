@@ -36,7 +36,7 @@ async function register(req, res) {
       "INSERT INTO users(username, firstname, lastname,email,password) VALUES(? ,?, ?, ?, ?)",
       [username, firstname, lastname, email, hashedPassword]
     );
-    return res.status(StatusCodes.CREATED).json({ msg: "user relisted" });
+    return res.status(StatusCodes.CREATED).json({ msg: "user register" });
   } catch (error) {
     console.log(error.message);
     return res
