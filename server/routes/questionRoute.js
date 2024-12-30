@@ -4,6 +4,7 @@ const {
   getAllQuestions,
   getSingleQuestion,
   deleteQuestion,
+  editQuestion,
 } = require("../controller/questionController");
 const router = express.Router();
 
@@ -18,4 +19,7 @@ router.get("/:questionid", getSingleQuestion);
 
 // Delete a single question
 router.delete("/:questionid", deleteQuestion);
+
+// Edit a question
+router.patch("/:questionid", editQuestion); 
 module.exports = router;

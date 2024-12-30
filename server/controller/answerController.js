@@ -32,9 +32,10 @@ async function postAnswer(req, res) {
 async function getAnswersForQuestion(req, res) {
   const { questionid } = req.params;
 
+
   try {
     const [answers] = await dbConnection.query(
-      "SELECT users.username, answers.answer FROM users JOIN answers ON answers.userid = users.userid WHERE answers.questionid = ?",
+      "SELECT users.username, answers.answer, answers.answerid FROM users JOIN answers ON answers.userid = users.userid WHERE answers.questionid = ?",
       [questionid]
     );
 
@@ -56,32 +57,27 @@ async function getAnswersForQuestion(req, res) {
 }
 
 async function deleteAnswer(req, res) {
-  const { questionid } = req.params; // Get question ID from request parameters
-  const userid = req.user.userid; // Get user ID from authenticated user
-
-  if (!questionid) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "Question ID is required." });
-  }
-
+  const { questionid } = req.params; 
+  const { answerid } = req.body; 
+  const userid = req.user.userid; 
   try {
+    
     const [rows] = await dbConnection.query(
-      "SELECT * FROM answers WHERE questionid = ? AND userid = ?",
-      [questionid, userid]
+      "SELECT * FROM answers WHERE questionid = ? AND userid = ? AND answerid = ?",
+      [questionid, userid, answerid]
     );
 
     if (rows.length === 0) {
       return res.status(StatusCodes.NOT_FOUND).json({
         error: "Not Found",
-        message: "No answer found for this question by the user.",
+        message: "No answer found with the provided details.",
       });
     }
 
-    // Delete the answer
+    // Delete the specific answer
     await dbConnection.query(
-      "DELETE FROM answers WHERE questionid = ? AND userid = ?",
-      [questionid, userid]
+      "DELETE FROM answers WHERE questionid = ? AND userid = ? AND answerid = ?",
+      [questionid, userid, answerid]
     );
 
     return res

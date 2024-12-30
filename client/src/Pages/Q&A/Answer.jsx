@@ -22,8 +22,9 @@ function Answer() {
   const [data, setData] = useState({});
   const [editingAnswer, setEditingAnswer] = useState(null);
   const [updatedAnswer, setUpdatedAnswer] = useState("");
-  const token = localStorage.getItem("token");
   const { userData } = useContext(AppState);
+    const currentUserUsername = userData.username; 
+  const token = localStorage.getItem("token");
   const headerToken = { Authorization: ` Bearer ${token} ` };
 
   useEffect(() => {
@@ -49,9 +50,10 @@ function Answer() {
         const response = await axiosBase.get(`/answers/${questionid}`, {
           headers: headerToken,
         });
-       
+
+        setAnswers(response.data.answers);
+        console.log(response.data);
         
-        setAnswers(response.data.answers || []);
       } catch (err) {
         console.error("Error fetching answers: ", err);
       }
@@ -129,22 +131,29 @@ function Answer() {
     }
   };
 
-  const deleteAnswer = async () => {
+ const deleteAnswer = async (answer) => {
     try {
       await axiosBase.delete(`/answers/${questionid}`, {
         headers: headerToken,
+        data: { answerid: answer.answerid }, 
+      });
+      setAnswers((prevAnswers) => {
+        const updatedAnswers = prevAnswers.filter((ans) => {
+          const currentAnswerId =  ans.answerid;
+          return currentAnswerId !== answer.answerid;
+        });
+        console.log("After filtering:", updatedAnswers);
+        return updatedAnswers;
       });
 
-      setAnswers((prevAnswers) =>
-        prevAnswers.filter((answer) => answer.username !== userData.username)
-      );
-
-      toast.success("Answer deleted successfully!"); 
+      toast.success("Answer deleted successfully!");
     } catch (error) {
-      console.error("Error deleting answer: ", error);
-      toast.error("Failed to delete the answer."); 
+      console.error("Error deleting answer:", error);
+      toast.error("Failed to delete the answer.");
     }
   };
+
+
 
   return (
     <Layout>
@@ -162,8 +171,8 @@ function Answer() {
           {isLoading ? (
             <p>Loading answers...</p>
           ) : answers.length > 0 ? (
-            answers.map((answer) => (
-              <div key={answer.id} className="Answer">
+            answers.map((answer, i) => (
+              <div key={i} className="Answer">
                 <div className="answer_prof_pic">
                   <div>
                     <BsPersonCircle size={70} color="gray" />
@@ -172,28 +181,33 @@ function Answer() {
                 </div>
 
                 <div>{answer?.answer}</div>
-                <div>
-                  <MdEdit
-                    style={{
-                      cursor: "pointer",
-                      color: "blue",
-                      marginLeft: "10px",
-                    }}
-                    onClick={() => startEditing(answer)}
-                    size={30}
-                  />
-                </div>
-                <div>
-                  <MdOutlineDelete
-                    style={{
-                      cursor: "pointer",
-                      color: "gray",
-                      marginLeft: "10px",
-                    }}
-                    onClick={() => deleteAnswer(answer.id)}
-                    size={30}
-                  />
-                </div>
+                {currentUserUsername &&
+                  answer.username === currentUserUsername && (
+                    <>
+                      <div>
+                        <MdEdit
+                          style={{
+                            cursor: "pointer",
+                            color: "blue",
+                            marginLeft: "10px",
+                          }}
+                          onClick={() => startEditing(answer)}
+                          size={30}
+                        />
+                      </div>
+                      <div>
+                        <MdOutlineDelete
+                          style={{
+                            cursor: "pointer",
+                            color: "gray",
+                            marginLeft: "10px",
+                          }}
+                          onClick={() => deleteAnswer(answer)}
+                          size={30}
+                        />
+                      </div>
+                    </>
+                  )}
               </div>
             ))
           ) : (
@@ -201,8 +215,8 @@ function Answer() {
           )}
 
           {editingAnswer && (
-            <div className={styles.edit_form_overlay}>
-              <form onSubmit={updateAnswer} className={styles.edit_form}>
+            <div>
+              <form onSubmit={updateAnswer}>
                 <textarea
                   rows={4}
                   className={styles.question_description}
@@ -234,7 +248,9 @@ function Answer() {
           )}
 
           <div className={styles.question_form}>
-            <h4 className={styles.question_post_your}>Answer The Top Question</h4>
+            <h4 className={styles.question_post_your}>
+              Answer The Top Question
+            </h4>
             <h4>
               <Link className={styles.question_post_link} to="/">
                 Go to Question Page

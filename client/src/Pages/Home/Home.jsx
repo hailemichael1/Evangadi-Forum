@@ -6,11 +6,14 @@ import "./Allquestion.css";
 import Layout from "../../Components/Layout/Layout";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { IoSearch } from "react-icons/io5";
 function Homepage() {
   const [userData] = useContext(UserContext);
   const [questions, setQuestions] = useState([]);
   const navigate = useNavigate();
   const [displayedQuestions, setDisplayedQuestions] = useState(10);
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   const fetchQuestions = async () => {
     try {
@@ -19,7 +22,7 @@ function Homepage() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params: { userid: userData.userid },
+        
       });
       setQuestions(response.data.questions);
       console.log(response.data.questions);
@@ -41,13 +44,21 @@ function Homepage() {
   };
 
   const seeMore = () => {
-    setDisplayedQuestions((prevCount) => prevCount + 10); 
+    setDisplayedQuestions((prevCount) => prevCount + 10);
   };
 
   // Handle showing less questions
   const seeLess = () => {
-    setDisplayedQuestions(10); 
+    setDisplayedQuestions(10);
   };
+
+  // Filter questions based on search query
+  const filteredQuestions = questions.filter((question) => {
+    const title = question.title ? question.title.toLowerCase() : "";
+    return (
+      title.includes(searchQuery.toLowerCase())
+    );
+  });
   return (
     <Layout>
       <div className="container">
@@ -65,14 +76,23 @@ function Homepage() {
                 </h4>
               </div>
             </div>
+            <div className="search-bar">
+              <input
+                type="text"
+                placeholder="Search questions..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <IoSearch size={20} />
+            </div>
           </div>
-          <h3 className="ns">Questions</h3>
+          <h3 className="questions">Questions</h3>
         </div>
         <div>
-          {questions?.slice(0, displayedQuestions).map((question, i) => (
+          {filteredQuestions.slice(0, displayedQuestions).map((question) => (
             <QuestionDetail
               question={question}
-              key={i}
+              key={question.id}
               onDelete={handleDeleteQuestion}
             />
           ))}

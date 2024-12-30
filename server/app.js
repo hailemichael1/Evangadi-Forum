@@ -15,6 +15,10 @@ const dbConnection = require("./db/dbConfig");
 // authorization middleware
 const authMiddleware = require("./middleware/authMiddleware");
 
+// Table route
+const TableRoute = require('./routes/createTableRoute')
+
+app.use("/api", TableRoute)
 // user route middleware file
 const UserRoutes = require("./routes/userRoute");
 
