@@ -23,6 +23,7 @@ function Answer() {
   const [editingAnswer, setEditingAnswer] = useState(null);
   const [updatedAnswer, setUpdatedAnswer] = useState("");
   const { userData } = useContext(AppState);
+    const currentUserUsername = userData.username; 
   const token = localStorage.getItem("token");
   const headerToken = { Authorization: ` Bearer ${token} ` };
 
@@ -138,7 +139,7 @@ function Answer() {
       });
       setAnswers((prevAnswers) => {
         const updatedAnswers = prevAnswers.filter((ans) => {
-          const currentAnswerId = ans.data ? ans.data.answerid : ans.answerid;
+          const currentAnswerId =  ans.answerid;
           return currentAnswerId !== answer.answerid;
         });
         console.log("After filtering:", updatedAnswers);
@@ -180,28 +181,33 @@ function Answer() {
                 </div>
 
                 <div>{answer?.answer}</div>
-                <div>
-                  <MdEdit
-                    style={{
-                      cursor: "pointer",
-                      color: "blue",
-                      marginLeft: "10px",
-                    }}
-                    onClick={() => startEditing(answer)}
-                    size={30}
-                  />
-                </div>
-                <div>
-                  <MdOutlineDelete
-                    style={{
-                      cursor: "pointer",
-                      color: "gray",
-                      marginLeft: "10px",
-                    }}
-                    onClick={() => deleteAnswer(answer)}
-                    size={30}
-                  />
-                </div>
+                {currentUserUsername &&
+                  answer.username === currentUserUsername && (
+                    <>
+                      <div>
+                        <MdEdit
+                          style={{
+                            cursor: "pointer",
+                            color: "blue",
+                            marginLeft: "10px",
+                          }}
+                          onClick={() => startEditing(answer)}
+                          size={30}
+                        />
+                      </div>
+                      <div>
+                        <MdOutlineDelete
+                          style={{
+                            cursor: "pointer",
+                            color: "gray",
+                            marginLeft: "10px",
+                          }}
+                          onClick={() => deleteAnswer(answer)}
+                          size={30}
+                        />
+                      </div>
+                    </>
+                  )}
               </div>
             ))
           ) : (
@@ -209,7 +215,7 @@ function Answer() {
           )}
 
           {editingAnswer && (
-            <div >
+            <div>
               <form onSubmit={updateAnswer}>
                 <textarea
                   rows={4}

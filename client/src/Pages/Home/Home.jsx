@@ -6,6 +6,7 @@ import "./Allquestion.css";
 import Layout from "../../Components/Layout/Layout";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { IoSearch } from "react-icons/io5";
 function Homepage() {
   const [userData] = useContext(UserContext);
   const [questions, setQuestions] = useState([]);
@@ -82,9 +83,10 @@ function Homepage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              <IoSearch size={20} />
             </div>
           </div>
-          <h3 className="ns">Questions</h3>
+          <h3 className="questions">Questions</h3>
         </div>
         <div>
           {filteredQuestions.slice(0, displayedQuestions).map((question) => (

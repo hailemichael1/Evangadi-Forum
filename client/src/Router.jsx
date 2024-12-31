@@ -11,6 +11,8 @@ import axios from "./axiosConfig";
 import { UserContext } from "./Components/Dataprovide/DataProvider";
 import HowItWorks from "./Pages/HowItWorks/HowItWorks";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
+import EditQuestion from "./Pages/QuestionDetail/EditQuestion/EditQuestion";
+
 export const AppState = createContext();
 function Routing() {
   const [userData, setUserData] = useContext(UserContext);
@@ -75,6 +77,8 @@ function Routing() {
         />
 
         <Route path="/question/:questionid" element={<Answer />} />
+        <Route path="/edit-question/:questionid" element={<EditQuestion />} />
+
         <Route path="/question" element={<AskQuestions />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="*" element={<NotFound />} />

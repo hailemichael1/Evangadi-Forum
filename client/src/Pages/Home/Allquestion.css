@@ -13,9 +13,22 @@
      border-radius: 5px;
      color: #fff;
 }
+.questions{
+    margin-top: 40px;
+}
 .qb:hover{ 
     background-color: #FE8402!important;
 }
 .askque{
   margin-bottom: 20px;
+}
+.search-bar input{
+    width: 95%;
+    padding: 1%;
+    border: none;
+    outline: none;
+}
+.search-bar{
+     box-shadow: 2px 2px 2px 1px rgb(95, 92, 92);
+     width: 50%;
 }
